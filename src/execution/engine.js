@@ -24,9 +24,7 @@ export async function execute({
             code
         );
 
-        // -----------------------
-        // Compile (if required)
-        // -----------------------
+       
         if (config.compile) {
 
             const compileResult = await runDocker({
@@ -46,9 +44,7 @@ export async function execute({
             }
         }
 
-        // -----------------------
-        // Run
-        // -----------------------
+       
         const runResult = await runDocker({
             containerName: `execution-${id}`,
             image: config.image,

@@ -4,7 +4,7 @@ async function main() {
 
     
   const result=  await execute({
-    language: "javascript",   // ✅
+    language: "javascript",   
     code: `const fs = require("fs");
 
 const input = fs.readFileSync(0, "utf8");
