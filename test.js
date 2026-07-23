@@ -1,21 +1,22 @@
 import { execute } from "./src/execution/engine.js";
 
 async function main() {
+    const result = await execute({
+        language: "cpp",
+        code: `
+#include <iostream>
+using namespace std;
 
-    
-  const result=  await execute({
-    language: "javascript",   
-    code: `const fs = require("fs");
-
-const input = fs.readFileSync(0, "utf8");
-
-console.log(Number(input) * 2);
+int main() {
+    int a, b;
+    cin >> a >> b;
+    cout << a + b;
+}
 `,
- stdin:"12"
-});
+        stdin: "2 3\n",
+    });
 
     console.log(result);
-
 }
 
 main();

@@ -31,7 +31,8 @@ export function runDocker({
 
             ...command,
         ];
-
+console.log("Command:", command);
+console.log("STDIN:", JSON.stringify(stdin));
         const dockerProcess = spawn("docker", dockerArgs);
 
         let stdout = "";

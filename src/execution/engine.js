@@ -46,12 +46,13 @@ export async function execute({
 
        
         const runResult = await runDocker({
-            containerName: `execution-${id}`,
-            image: config.image,
-            workspace,
-            command: config.run(fileName),
-            timeout: 5000,
-        });
+    containerName: `execution-${id}`,
+    image: config.image,
+    workspace,
+    command: config.run(fileName),
+    stdin,
+    timeout: 5000,
+});
 
         return {
             stage: "run",
