@@ -9,7 +9,7 @@ app.use("/api", executionRoutes);
 
 app.use(errorHandler);
 
-const PORT = 8080;
+const PORT = 3000;
 
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
