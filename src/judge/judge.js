@@ -1,5 +1,8 @@
 import { execute } from "../execution/engine.js";
 import { compareOutput } from "./compareOutput.js";
+import { STATUS } from "./status.js";
+import { EXECUTION_ERROR } from "../execution/err.js";
+
 
 export async function judge({
     language,
@@ -17,11 +20,26 @@ export async function judge({
             stdin: testCase.input,
         });
 
-        // If compilation/runtime/timeout failed
-        if (!executionResult.success) {
+        // Compilation Error
+        if (executionResult.stage === "compile") {
             return {
-                success: false,
-                stage: executionResult.stage,
+                status: STATUS.COMPILATION_ERROR,
+                ...executionResult,
+            };
+        }
+
+        // Runtime Error / Timeout
+        if (!executionResult.success) {
+
+            if (executionResult.reason === EXECUTION_ERROR.TIMEOUT) {
+    return {
+        status: STATUS.TIME_LIMIT_EXCEEDED,
+        ...executionResult,
+    };
+}
+
+            return {
+                status: STATUS.RUNTIME_ERROR,
                 ...executionResult,
             };
         }
@@ -37,14 +55,24 @@ export async function judge({
             actualOutput: executionResult.stdout,
             passed,
         });
+
+        // Fail Fast
+        if (!passed) {
+
+            return {
+                status: STATUS.WRONG_ANSWER,
+                passed: results.filter(r => r.passed).length,
+                total: testCases.length,
+                results,
+            };
+
+        }
     }
 
-    const passedCount = results.filter(r => r.passed).length;
-
     return {
-        success: passedCount === results.length,
-        passed: passedCount,
-        total: results.length,
+        status: STATUS.ACCEPTED,
+        passed: testCases.length,
+        total: testCases.length,
         results,
     };
 

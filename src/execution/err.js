@@ -1,0 +1,6 @@
+export const EXECUTION_ERROR = {
+    TIMEOUT: "TIMEOUT",
+    DOCKER_ERROR: "DOCKER_ERROR",
+    RUNTIME_ERROR: "RUNTIME_ERROR",
+    NONE: null,
+};
