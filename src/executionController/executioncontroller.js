@@ -1,7 +1,7 @@
 import { execute } from "../execution/engine.js";
 import { judge } from "../judge/judge.js";
 
-export async function executeCode(req, res) {
+export async function executeCode(req, res,next) {
 
     try {
 
@@ -10,16 +10,13 @@ export async function executeCode(req, res) {
         return res.json(result);
 
     } catch (err) {
-
-        return res.status(500).json({
-            message: err.message,
-        });
-
+next(err);
+    
     }
 
 }
 
-export async function judgeCode(req, res) {
+export async function judgeCode(req, res,next) {
 
     try {
 
@@ -28,10 +25,7 @@ export async function judgeCode(req, res) {
         return res.json(result);
 
     } catch (err) {
-
-        return res.status(500).json({
-            message: err.message,
-        });
+  next(err)
 
     }
 
