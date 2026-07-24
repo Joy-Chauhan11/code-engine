@@ -1,4 +1,6 @@
 import { spawn, exec } from "child_process";
+import { EXECUTION_ERROR } from "../err.js";
+
 
 export function runDocker({
     containerName,
@@ -45,19 +47,21 @@ console.log("STDIN:", JSON.stringify(stdin));
 
         dockerProcess.stdin.end();
 
+        let timedOut = false;
         const timer = setTimeout(() => {
+    timedOut = true;
 
-            exec(`docker kill ${containerName}`, () => {
+    dockerProcess.kill();
 
-                reject(
-                    new Error(
-                        `Execution timed out after ${timeout}ms`
-                    )
-                );
+    resolve({
+        success: false,
+        reason: EXECUTION_ERROR.TIMEOUT,
+        stdout,
+        stderr: `Execution timed out after ${timeout}ms`,
+        exitCode: null,
+    });
 
-            });
-
-        }, timeout);
+}, timeout);
 
         dockerProcess.stdout.on("data", (data) => {
             stdout += data.toString();
@@ -67,27 +71,37 @@ console.log("STDIN:", JSON.stringify(stdin));
             stderr += data.toString();
         });
 
-        dockerProcess.on("close", (exitCode) => {
+       dockerProcess.on("close", (exitCode) => {
 
-            clearTimeout(timer);
+    if (timedOut) return;
 
-            resolve({
-                success: exitCode === 0,
-                stdout,
-                stderr,
-                exitCode,
-            });
+    clearTimeout(timer);
 
-        });
+    resolve({
+        success: exitCode === 0,
+        reason:
+            exitCode === 0
+                ? EXECUTION_ERROR.NONE
+                : EXECUTION_ERROR.RUNTIME_ERROR,
+        stdout,
+        stderr,
+        exitCode,
+    });
 
-        dockerProcess.on("error", (error) => {
+});
+dockerProcess.on("error", (err) => {
 
-            clearTimeout(timer);
+    clearTimeout(timer);
 
-            reject(error);
+    resolve({
+        success: false,
+        reason: EXECUTION_ERROR.DOCKER_ERROR,
+        stdout: "",
+        stderr: err.message,
+        exitCode: null,
+    });
 
-        });
-
+});
     });
 
 }
