@@ -8,11 +8,18 @@ export const judgeSchema = Joi.object({
     code: Joi.string()
         .required(),
 
+    functionName: Joi.string()
+        .required(),
+
     testCases: Joi.array()
         .items(
             Joi.object({
-                input: Joi.string().required(),
-                expectedOutput: Joi.string().required()
+                input: Joi.object({
+                    args: Joi.array().required()
+                }).required(),
+
+              
+                expectedOutput: Joi.any().required()
             })
         )
         .min(1)

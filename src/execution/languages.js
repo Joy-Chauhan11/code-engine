@@ -2,59 +2,30 @@ export const LANGUAGES = {
     javascript: {
         extension: "js",
         image: "node:22",
-
         compile: null,
-
-        run: (fileName) => [
-            "node",
-            fileName,
-        ],
+        run: (fileName) => ["node", fileName],
     },
 
     python: {
         extension: "py",
         image: "python:3.12",
-
         compile: null,
-
-        run: (fileName) => [
-            "python",
-            fileName,
-        ],
+        run: (fileName) => ["python", fileName],
     },
 
     cpp: {
         extension: "cpp",
         image: "gcc:14",
-
-        compile: (fileName) => [
-            "g++",
-            fileName,
-            "-o",
-            "/app/main",
-        ],
-
-        run: () => [
-            "/app/main",
-        ],
+        compile: (fileName) => ["g++", fileName, "-o", "/app/main"],
+        run: () => ["/app/main"],
+        supportedForJudge: false, 
     },
 
     java: {
         extension: "java",
         image: "openjdk:21",
-
-        compile: () => [
-            "javac",
-            "-d",
-            "/app",
-            "Main.java",
-        ],
-
-        run: () => [
-            "java",
-            "-cp",
-            "/app",
-            "Main",
-        ],
+        compile: () => ["javac", "-d", "/app", "Main.java"],
+        run: () => ["java", "-cp", "/app", "Main"],
+        supportedForJudge: false, 
     },
 };

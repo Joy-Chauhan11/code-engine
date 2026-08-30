@@ -13,27 +13,54 @@ export function runDocker({
 
     return new Promise((resolve, reject) => {
 
-        const dockerArgs = [
-            "run",
+        // const dockerArgs = [
+        //     "run",
 
-            "--name",
-            containerName,
+        //     "--name",
+        //     containerName,
 
-            "--rm",
+        //     "--rm",
 
-            "-i",
+        //     "-i",
 
-            "-v",
-            `${workspace}:/app`,
+        //     "-v",
+        //     `${workspace}:/app`,
 
-            "-w",
-            "/app",
+        //     "-w",
+        //     "/app",
 
-            image,
+        //     image,
 
-            ...command,
-        ];
-console.log("Command:", command);
+        //     ...command,
+        // ];
+    const dockerArgs = [
+    "run",
+
+    "--name",
+    containerName,
+
+    "--rm",
+
+    "-i",
+
+    "--cpus",
+    "0.5",
+    
+     "--memory",
+    "128m",
+
+    "-v",
+    `${workspace}:/app`,
+
+    "-w",
+    "/app",
+
+    image,
+
+    ...command,
+];
+
+        console.log("Command:", command);
 console.log("STDIN:", JSON.stringify(stdin));
         const dockerProcess = spawn("docker", dockerArgs);
 
